@@ -3,126 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>System Love v3.0</title>
+<title>Mensaje</title>
 
 <style>
 body {
     margin: 0;
     background: black;
-    color: #00ff9f;
-    font-family: monospace;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont;
     text-align: center;
     overflow: hidden;
 }
 
-/* Texto inicial */
-#text {
-    margin-top: 80px;
-    font-size: 20px;
+/* Pantalla tipo notificación */
+#lockscreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-/* Contenedor final */
-#final {
+.notification {
+    background: #222;
+    padding: 15px;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 300px;
+    cursor: pointer;
+}
+
+.notification h3 {
+    margin: 0;
+}
+
+#main {
     display: none;
-    margin-top: 80px;
+    padding-top: 50px;
 }
 
-/* Botones */
+/* botones */
 button {
     background: #00ff9f;
     border: none;
     padding: 12px 20px;
-    font-size: 16px;
-    cursor: pointer;
     margin: 10px;
     border-radius: 10px;
+    font-size: 16px;
 }
 
-/* Corazones */
+/* corazones */
 .heart {
     position: fixed;
     color: red;
-    font-size: 20px;
     animation: float 5s linear infinite;
 }
 
 @keyframes float {
-    0% { transform: translateY(100vh); opacity: 1; }
-    100% { transform: translateY(-10vh); opacity: 0; }
+    0% { transform: translateY(100vh); }
+    100% { transform: translateY(-10vh); }
+}
+
+/* mensajes ocultos */
+.msg {
+    position: fixed;
+    color: pink;
+    font-size: 18px;
+    animation: fade 2s forwards;
+}
+
+@keyframes fade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }
 </style>
-
 </head>
+
 <body>
 
-<h2 id="text"></h2>
+<!-- Pantalla tipo iPhone -->
+<div id="lockscreen">
+    <div class="notification" onclick="abrir()">
+        <h3>💚 Nuevo mensaje</h3>
+        <p>De: Tu esposo 😏</p>
+    </div>
+</div>
 
-<div id="final">
+<!-- Contenido principal -->
+<div id="main">
     <h1>💚 Invitación detectada 💚</h1>
-    <p>¿Aceptas salir a cenar conmigo este domingo para celebrar nuestro primer mes de casados? 💍</p>
-    
+    <p>¿Aceptas salir a cenar conmigo este domingo? 💍</p>
+
+    <!-- Spotify -->
+    <iframe style="border-radius:12px" 
+    src="https://open.spotify.com/embed/track/5QO79kh1waicV47BqGRL3g" 
+    width="300" height="80" frameBorder="0" allowfullscreen 
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
+
+    <br>
+
     <button onclick="aceptar()">Sí ❤️</button>
     <button id="noBtn">No 😢</button>
 </div>
 
 <script>
-let mensajes = [
-    "Iniciando sistema...",
-    "Cargando recuerdos...",
-    "5 meses de novios detectados...",
-    "1 mes de matrimonio confirmado...",
-    "Nivel de amor: INFINITO ❤️",
-    "Acceso concedido a: Mi esposa 💕"
-];
 
-let i = 0;
-
-// Intro tipo sistema
-function escribir() {
-    if (i < mensajes.length) {
-        document.getElementById("text").innerHTML = mensajes[i];
-        i++;
-        setTimeout(escribir, 1500);
-    } else {
-        document.getElementById("text").style.display = "none";
-        document.getElementById("final").style.display = "block";
-    }
+// abrir tipo notificación
+function abrir() {
+    document.getElementById("lockscreen").style.display = "none";
+    document.getElementById("main").style.display = "block";
 }
 
-// Botón Sí
+// aceptar
 function aceptar() {
     alert("Sabía que dirías que sí 😏❤️ Te veo el domingo 💍");
 }
 
-// Botón No que huye
-function moverBoton() {
-    let btn = document.getElementById("noBtn");
-
-    btn.style.position = "absolute";
-
-    let x = Math.random() * (window.innerWidth - btn.offsetWidth);
-    let y = Math.random() * (window.innerHeight - btn.offsetHeight);
-
-    btn.style.left = x + "px";
-    btn.style.top = y + "px";
-}
-
-// Eventos (iPhone + PC)
+// botón que huye
 let noBtn = document.getElementById("noBtn");
+
+function moverBoton() {
+    noBtn.style.position = "absolute";
+
+    let x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    let y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
 
 noBtn.addEventListener("touchstart", function(e) {
     e.preventDefault();
     moverBoton();
 });
 
-noBtn.addEventListener("mouseover", function() {
-    moverBoton();
-});
+noBtn.addEventListener("mouseover", moverBoton);
 
-// Corazones animados
+// corazones
 function crearCorazon() {
     let heart = document.createElement("div");
-    heart.classList.add("heart");
+    heart.className = "heart";
     heart.innerHTML = "❤️";
 
     heart.style.left = Math.random() * 100 + "vw";
@@ -130,15 +151,31 @@ function crearCorazon() {
 
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 5000);
+    setTimeout(() => heart.remove(), 5000);
 }
-
 setInterval(crearCorazon, 300);
 
-// Iniciar animación
-escribir();
+// mensajes ocultos
+let frases = [
+    "Te amo ❤️",
+    "Eres mi todo 💕",
+    "Gracias por estar conmigo 💍",
+    "Mi lugar favorito eres tú 💖"
+];
+
+document.addEventListener("click", function(e) {
+    let msg = document.createElement("div");
+    msg.className = "msg";
+    msg.innerText = frases[Math.floor(Math.random() * frases.length)];
+
+    msg.style.left = e.clientX + "px";
+    msg.style.top = e.clientY + "px";
+
+    document.body.appendChild(msg);
+
+    setTimeout(() => msg.remove(), 2000);
+});
+
 </script>
 
 </body>
