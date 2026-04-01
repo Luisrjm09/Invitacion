@@ -2,38 +2,62 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>System Love v2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Love v3.0</title>
+
 <style>
-    body {
-        background: black;
-        color: #00ff9f;
-        font-family: monospace;
-        text-align: center;
-        padding-top: 50px;
-        overflow: hidden;
-    }
-    .hidden { display: none; }
+body {
+    margin: 0;
+    background: black;
+    color: #00ff9f;
+    font-family: monospace;
+    text-align: center;
+    overflow: hidden;
+}
 
-    button {
-        background: #00ff9f;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        margin: 10px;
-        border-radius: 8px;
-    }
+/* Texto inicial */
+#text {
+    margin-top: 80px;
+    font-size: 20px;
+}
 
-    #noBtn {
-        position: absolute;
-    }
+/* Contenedor final */
+#final {
+    display: none;
+    margin-top: 80px;
+}
+
+/* Botones */
+button {
+    background: #00ff9f;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+/* Corazones */
+.heart {
+    position: fixed;
+    color: red;
+    font-size: 20px;
+    animation: float 5s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
 </style>
+
 </head>
 <body>
 
 <h2 id="text"></h2>
 
-<div id="final" class="hidden">
+<div id="final">
     <h1>💚 Invitación detectada 💚</h1>
     <p>¿Aceptas salir a cenar conmigo este domingo para celebrar nuestro primer mes de casados? 💍</p>
     
@@ -53,25 +77,28 @@ let mensajes = [
 
 let i = 0;
 
+// Intro tipo sistema
 function escribir() {
     if (i < mensajes.length) {
         document.getElementById("text").innerHTML = mensajes[i];
         i++;
         setTimeout(escribir, 1500);
     } else {
-        document.getElementById("text").classList.add("hidden");
-        document.getElementById("final").classList.remove("hidden");
-        moverBoton(); // posición inicial
+        document.getElementById("text").style.display = "none";
+        document.getElementById("final").style.display = "block";
     }
 }
 
+// Botón Sí
 function aceptar() {
-    alert("Sabía que dirías que sí 😏 Te veo el domingo ❤️");
+    alert("Sabía que dirías que sí 😏❤️ Te veo el domingo 💍");
 }
 
-// 🔥 FUNCIÓN PARA MOVER EL BOTÓN
+// Botón No que huye
 function moverBoton() {
     let btn = document.getElementById("noBtn");
+
+    btn.style.position = "absolute";
 
     let x = Math.random() * (window.innerWidth - btn.offsetWidth);
     let y = Math.random() * (window.innerHeight - btn.offsetHeight);
@@ -80,26 +107,37 @@ function moverBoton() {
     btn.style.top = y + "px";
 }
 
-// Para PC (hover)
-document.addEventListener("mousemove", function(e) {
-    let btn = document.getElementById("noBtn");
-    let rect = btn.getBoundingClientRect();
+// Eventos (iPhone + PC)
+let noBtn = document.getElementById("noBtn");
 
-    if (
-        e.clientX > rect.left - 50 &&
-        e.clientX < rect.right + 50 &&
-        e.clientY > rect.top - 50 &&
-        e.clientY < rect.bottom + 50
-    ) {
-        moverBoton();
-    }
-});
-
-// Para iPhone (touch)
-document.addEventListener("touchstart", function() {
+noBtn.addEventListener("touchstart", function(e) {
+    e.preventDefault();
     moverBoton();
 });
 
+noBtn.addEventListener("mouseover", function() {
+    moverBoton();
+});
+
+// Corazones animados
+function crearCorazon() {
+    let heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 5000);
+}
+
+setInterval(crearCorazon, 300);
+
+// Iniciar animación
 escribir();
 </script>
 
