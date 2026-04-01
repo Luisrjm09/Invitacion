@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>System Love v1.0</title>
+<style>
+    body {
+        background: black;
+        color: #00ff9f;
+        font-family: monospace;
+        text-align: center;
+        padding-top: 50px;
+    }
+    .hidden { display: none; }
+    button {
+        background: #00ff9f;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px;
+    }
+</style>
+</head>
+<body>
+
+<h2 id="text"></h2>
+
+<div id="final" class="hidden">
+    <h1>💚 Invitación detectada 💚</h1>
+    <p>¿Aceptas salir a cenar conmigo este domingo para celebrar nuestro primer mes de casados? 💍</p>
+    <button onclick="respuesta()">Aceptar</button>
+    <button onclick="respuesta()">Aceptar obviamente</button>
+</div>
+
+<script>
+let mensajes = [
+    "Iniciando sistema...",
+    "Cargando recuerdos...",
+    "5 meses de novios detectados...",
+    "1 mes de matrimonio confirmado...",
+    "Nivel de amor: INFINITO ❤️",
+    "Usuario especial detectado...",
+    "Acceso concedido a: Mi esposa 💕"
+];
+
+let i = 0;
+
+function escribir() {
+    if (i < mensajes.length) {
+        document.getElementById("text").innerHTML = mensajes[i];
+        i++;
+        setTimeout(escribir, 1500);
+    } else {
+        document.getElementById("text").classList.add("hidden");
+        document.getElementById("final").classList.remove("hidden");
+    }
+}
+
+function respuesta() {
+    alert("Sabía que dirías que sí 😏 Te veo el domingo ❤️");
+}
+
+escribir();
+</script>
+
+</body>
+</html>
