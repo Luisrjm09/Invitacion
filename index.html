@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>System Love v1.0</title>
+<title>System Love v2.0</title>
 <style>
     body {
         background: black;
@@ -10,15 +10,22 @@
         font-family: monospace;
         text-align: center;
         padding-top: 50px;
+        overflow: hidden;
     }
     .hidden { display: none; }
+
     button {
         background: #00ff9f;
         border: none;
-        padding: 10px 20px;
+        padding: 12px 20px;
         font-size: 16px;
         cursor: pointer;
         margin: 10px;
+        border-radius: 8px;
+    }
+
+    #noBtn {
+        position: absolute;
     }
 </style>
 </head>
@@ -29,8 +36,9 @@
 <div id="final" class="hidden">
     <h1>💚 Invitación detectada 💚</h1>
     <p>¿Aceptas salir a cenar conmigo este domingo para celebrar nuestro primer mes de casados? 💍</p>
-    <button onclick="respuesta()">Aceptar</button>
-    <button onclick="respuesta()">Aceptar obviamente</button>
+    
+    <button onclick="aceptar()">Sí ❤️</button>
+    <button id="noBtn">No 😢</button>
 </div>
 
 <script>
@@ -40,7 +48,6 @@ let mensajes = [
     "5 meses de novios detectados...",
     "1 mes de matrimonio confirmado...",
     "Nivel de amor: INFINITO ❤️",
-    "Usuario especial detectado...",
     "Acceso concedido a: Mi esposa 💕"
 ];
 
@@ -54,12 +61,44 @@ function escribir() {
     } else {
         document.getElementById("text").classList.add("hidden");
         document.getElementById("final").classList.remove("hidden");
+        moverBoton(); // posición inicial
     }
 }
 
-function respuesta() {
+function aceptar() {
     alert("Sabía que dirías que sí 😏 Te veo el domingo ❤️");
 }
+
+// 🔥 FUNCIÓN PARA MOVER EL BOTÓN
+function moverBoton() {
+    let btn = document.getElementById("noBtn");
+
+    let x = Math.random() * (window.innerWidth - btn.offsetWidth);
+    let y = Math.random() * (window.innerHeight - btn.offsetHeight);
+
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+}
+
+// Para PC (hover)
+document.addEventListener("mousemove", function(e) {
+    let btn = document.getElementById("noBtn");
+    let rect = btn.getBoundingClientRect();
+
+    if (
+        e.clientX > rect.left - 50 &&
+        e.clientX < rect.right + 50 &&
+        e.clientY > rect.top - 50 &&
+        e.clientY < rect.bottom + 50
+    ) {
+        moverBoton();
+    }
+});
+
+// Para iPhone (touch)
+document.addEventListener("touchstart", function() {
+    moverBoton();
+});
 
 escribir();
 </script>
