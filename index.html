@@ -33,6 +33,19 @@ body {
     color: white;
 }
 
+/* Carta */
+#letter {
+    display: none;
+    padding: 30px;
+    color: white;
+}
+
+#cartaTexto {
+    white-space: pre-line;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
 /* Sistema */
 #system {
     display: none;
@@ -93,8 +106,14 @@ button {
 <div id="lockscreen">
     <div class="notification" onclick="abrir()">
         <h3>💚 Nuevo mensaje</h3>
-        <p>De: Tu esposo </p>
+        <p>De: Tu esposo</p>
     </div>
+</div>
+
+<!-- CARTA -->
+<div id="letter" onclick="iniciarSistema()">
+    <h2>Para ti ❤️</h2>
+    <p id="cartaTexto"></p>
 </div>
 
 <!-- Sistema -->
@@ -105,7 +124,7 @@ button {
 <!-- Final -->
 <div id="final">
     <h1>💚 Invitación detectada 💚</h1>
-    <p>¿Aceptas salir a cenar conmigo este domingo? </p>
+    <p>¿Aceptas salir a cenar conmigo este domingo?</p>
 
     <button onclick="aceptar()">Sí ❤️</button>
     <button id="noBtn">No 😢</button>
@@ -113,30 +132,69 @@ button {
 
 <script>
 
-// MENSAJES
+// 💌 CARTA COMPLETA (AQUÍ ESTÁ TU TEXTO)
+let carta = `Desde que estás conmigo… todo se siente diferente.
+
+Cada momento contigo se vuelve especial...
+
+Hola preciosa, ¿como se encuentra la mami mas bonita de todo el mundo?
+
+Te escribo esta cartita de manera rapida mi amor, solo que sepas que te amo con todo mi corazon,
+eres lo mas bonito y preciado que tengo, gracias por este increible mes siendo esposos,
+por darme de tu tiempo y sobre todo dedicarme de tu tiempo, nunca en la vida me hubiese imaginado
+que estaria con una persona con una calidad humana tan preciosa como la tuya mi vida.
+Que nunca nunca se te olvide que eres lo mas bonito que me paso , que el echo de que formaremos una
+familia nosotros dos es algo que me llena de emocion y me da motivos para vivir cada dia.
+
+Por siempre y para siempre juntitos vida hermosa.
+Me encantas. ❤️
+
+(toca la pantalla)`;
+
+
+let indexCarta = 0;
+
+// MENSAJES SISTEMA
 let mensajes = [
     "Iniciando sistema...",
     "Cargando recuerdos...",
     "5 meses de novios detectados (casi jeje)...",
     "1 mes de matrimonio confirmado...",
     "Nivel de amor: DEMASIADO",
-    "Acceso concedido a: Mi esposa "
+    "Acceso concedido a: Mi esposa"
 ];
 
 let i = 0;
 
-// abrir (AQUÍ arranca la música 🔥)
+// abrir notificación
 function abrir() {
     document.getElementById("lockscreen").style.display = "none";
-    document.getElementById("system").style.display = "block";
+    document.getElementById("letter").style.display = "block";
 
+    // música
     let audio = document.getElementById("music");
-    audio.play(); // 👈 esto hace que sí funcione en iPhone
+    audio.play();
 
+    escribirCarta();
+}
+
+// máquina de escribir
+function escribirCarta() {
+    if (indexCarta < carta.length) {
+        document.getElementById("cartaTexto").innerHTML += carta.charAt(indexCarta);
+        indexCarta++;
+        setTimeout(escribirCarta, 30); // más fluido
+    }
+}
+
+// pasar a sistema
+function iniciarSistema() {
+    document.getElementById("letter").style.display = "none";
+    document.getElementById("system").style.display = "block";
     escribir();
 }
 
-// animación sistema
+// sistema
 function escribir() {
     if (i < mensajes.length) {
         document.getElementById("text").innerHTML = mensajes[i];
@@ -150,7 +208,7 @@ function escribir() {
 
 // aceptar
 function aceptar() {
-    alert("Sabía que dirías que sí jeje, te veo el domingo");
+    alert("Sabía que dirías que sí jeje, te veo el domingo ❤️");
 }
 
 // botón troll
