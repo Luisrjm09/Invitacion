@@ -8,9 +8,9 @@
 <style>
 body {
     margin: 0;
-    background: black;
-    color: #00ff9f;
-    font-family: monospace;
+    background: #f4ede4;
+    color: #4b3832;
+    font-family: "Courier New", monospace;
     text-align: center;
     overflow: hidden;
 }
@@ -24,20 +24,59 @@ body {
 }
 
 .notification {
-    background: #222;
-    padding: 15px;
+    background: #fff8f0;
+    padding: 20px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 320px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Sistema estilo ventanita */
+#system {
+    display: none;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.system-box {
+    background: #2e2a27;
+    color: #fce8d5;
+    padding: 20px;
     border-radius: 15px;
     width: 80%;
-    max-width: 300px;
-    cursor: pointer;
-    color: white;
+    max-width: 400px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.system-header {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.red { background: #ff6b6b; }
+.yellow { background: #ffd93d; }
+.green { background: #6bcf63; }
+
+#text {
+    font-size: 14px;
 }
 
 /* Carta */
 #letter {
     display: none;
     padding: 30px;
-    color: white;
 }
 
 #cartaTexto {
@@ -46,33 +85,27 @@ body {
     line-height: 1.6;
 }
 
-/* Sistema */
-#system {
-    display: none;
-    margin-top: 100px;
-    font-size: 20px;
-}
-
 /* Final */
 #final {
     display: none;
-    margin-top: 50px;
+    margin-top: 80px;
 }
 
 /* botones */
 button {
-    background: #00ff9f;
+    background: #d8a47f;
     border: none;
     padding: 12px 20px;
     margin: 10px;
     border-radius: 10px;
     font-size: 16px;
+    color: white;
 }
 
 /* corazones */
 .heart {
     position: fixed;
-    color: red;
+    color: #d98c8c;
     animation: float 5s linear infinite;
 }
 
@@ -84,7 +117,7 @@ button {
 /* mensajes ocultos */
 .msg {
     position: fixed;
-    color: pink;
+    color: #c97b63;
     animation: fade 2s forwards;
 }
 
@@ -97,7 +130,6 @@ button {
 
 <body>
 
-<!-- AUDIO -->
 <audio id="music" loop>
     <source src="mai.mp3" type="audio/mpeg">
 </audio>
@@ -105,25 +137,32 @@ button {
 <!-- Notificación -->
 <div id="lockscreen">
     <div class="notification" onclick="abrir()">
-        <h3>💚 Nuevo mensaje</h3>
+        <h3>💌 Nuevo mensaje</h3>
         <p>De: Tu esposo</p>
     </div>
 </div>
 
-<!-- CARTA -->
-<div id="letter" onclick="iniciarSistema()">
+<!-- Sistema -->
+<div id="system">
+    <div class="system-box">
+        <div class="system-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+        <div id="text"></div>
+    </div>
+</div>
+
+<!-- Carta -->
+<div id="letter" onclick="mostrarFinal()">
     <h2>Para ti ❤️</h2>
     <p id="cartaTexto"></p>
 </div>
 
-<!-- Sistema -->
-<div id="system">
-    <h2 id="text"></h2>
-</div>
-
 <!-- Final -->
 <div id="final">
-    <h1>💚 Invitación detectada 💚</h1>
+    <h1>💖 Invitación especial 💖</h1>
     <p>¿Aceptas salir a cenar conmigo este domingo?</p>
 
     <button onclick="aceptar()">Sí ❤️</button>
@@ -132,12 +171,7 @@ button {
 
 <script>
 
-// 💌 CARTA COMPLETA (AQUÍ ESTÁ TU TEXTO)
-let carta = `Desde que estás conmigo… todo se siente diferente.
-
-Cada momento contigo se vuelve especial...
-
-Hola preciosa, ¿como se encuentra la mami mas bonita de todo el mundo?
+let carta = `Hola preciosa, ¿como se encuentra la mami mas bonita de todo el mundo?
 
 Te escribo esta cartita de manera rapida mi amor, solo que sepas que te amo con todo mi corazon,
 eres lo mas bonito y preciado que tengo, gracias por este increible mes siendo esposos,
@@ -149,12 +183,14 @@ familia nosotros dos es algo que me llena de emocion y me da motivos para vivir 
 Por siempre y para siempre juntitos vida hermosa.
 Me encantas. ❤️
 
-(toca la pantalla)`;
+Desde que estás conmigo… todo se siente diferente.
 
+Cada momento contigo se vuelve especial...
+
+(toca la pantalla)`;
 
 let indexCarta = 0;
 
-// MENSAJES SISTEMA
 let mensajes = [
     "Iniciando sistema...",
     "Cargando recuerdos...",
@@ -166,52 +202,46 @@ let mensajes = [
 
 let i = 0;
 
-// abrir notificación
 function abrir() {
     document.getElementById("lockscreen").style.display = "none";
-    document.getElementById("letter").style.display = "block";
+    document.getElementById("system").style.display = "flex";
 
-    // música
-    let audio = document.getElementById("music");
-    audio.play();
+    document.getElementById("music").play();
 
-    escribirCarta();
+    escribirSistema();
 }
 
-// máquina de escribir
+function escribirSistema() {
+    if (i < mensajes.length) {
+        document.getElementById("text").innerHTML += mensajes[i] + "<br>";
+        i++;
+        setTimeout(escribirSistema, 1200);
+    } else {
+        setTimeout(() => {
+            document.getElementById("system").style.display = "none";
+            document.getElementById("letter").style.display = "block";
+            escribirCarta();
+        }, 800);
+    }
+}
+
 function escribirCarta() {
     if (indexCarta < carta.length) {
         document.getElementById("cartaTexto").innerHTML += carta.charAt(indexCarta);
         indexCarta++;
-        setTimeout(escribirCarta, 30); // más fluido
+        setTimeout(escribirCarta, 25);
     }
 }
 
-// pasar a sistema
-function iniciarSistema() {
+function mostrarFinal() {
     document.getElementById("letter").style.display = "none";
-    document.getElementById("system").style.display = "block";
-    escribir();
+    document.getElementById("final").style.display = "block";
 }
 
-// sistema
-function escribir() {
-    if (i < mensajes.length) {
-        document.getElementById("text").innerHTML = mensajes[i];
-        i++;
-        setTimeout(escribir, 1500);
-    } else {
-        document.getElementById("system").style.display = "none";
-        document.getElementById("final").style.display = "block";
-    }
-}
-
-// aceptar
 function aceptar() {
-    alert("Sabía que dirías que sí jeje, te veo el domingo ❤️");
+    alert("Sabía que dirías que sí ❤️ Te veo el domingo");
 }
 
-// botón troll
 let noBtn = document.getElementById("noBtn");
 
 function moverBoton() {
@@ -231,7 +261,6 @@ noBtn.addEventListener("touchstart", function(e) {
 
 noBtn.addEventListener("mouseover", moverBoton);
 
-// corazones
 function crearCorazon() {
     let heart = document.createElement("div");
     heart.className = "heart";
@@ -243,28 +272,7 @@ function crearCorazon() {
 
     setTimeout(() => heart.remove(), 5000);
 }
-setInterval(crearCorazon, 300);
-
-// mensajes ocultos
-let frases = [
-    "Te amo <3",
-    "Eres mi mundo entero",
-    "Gracias por estar conmigo",
-    "Mi lugar favorito eres tú"
-];
-
-document.addEventListener("click", function(e) {
-    let msg = document.createElement("div");
-    msg.className = "msg";
-    msg.innerText = frases[Math.floor(Math.random() * frases.length)];
-
-    msg.style.left = e.clientX + "px";
-    msg.style.top = e.clientY + "px";
-
-    document.body.appendChild(msg);
-
-    setTimeout(() => msg.remove(), 2000);
-});
+setInterval(crearCorazon, 400);
 
 </script>
 
