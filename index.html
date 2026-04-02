@@ -33,11 +33,10 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* Sistema estilo ventanita */
+/* Sistema */
 #system {
     display: none;
     height: 100vh;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -50,7 +49,6 @@ body {
     width: 80%;
     max-width: 400px;
     text-align: left;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .system-header {
@@ -59,30 +57,35 @@ body {
     margin-bottom: 10px;
 }
 
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.red { background: #ff6b6b; }
-.yellow { background: #ffd93d; }
-.green { background: #6bcf63; }
-
-#text {
-    font-size: 14px;
-}
+.dot { width:10px; height:10px; border-radius:50%; }
+.red { background:#ff6b6b; }
+.yellow { background:#ffd93d; }
+.green { background:#6bcf63; }
 
 /* Carta */
 #letter {
     display: none;
     padding: 30px;
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 #cartaTexto {
     white-space: pre-line;
     font-size: 18px;
     line-height: 1.6;
+    padding-bottom: 100px;
+}
+
+/* aviso scroll */
+#scrollMsg {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.7;
 }
 
 /* Final */
@@ -112,18 +115,6 @@ button {
 @keyframes float {
     0% { transform: translateY(100vh); }
     100% { transform: translateY(-10vh); }
-}
-
-/* mensajes ocultos */
-.msg {
-    position: fixed;
-    color: #c97b63;
-    animation: fade 2s forwards;
-}
-
-@keyframes fade {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
 }
 </style>
 </head>
@@ -155,9 +146,10 @@ button {
 </div>
 
 <!-- Carta -->
-<div id="letter" onclick="mostrarFinal()">
+<div id="letter">
     <h2>Para ti ❤️</h2>
     <p id="cartaTexto"></p>
+    <div id="scrollMsg">Desliza hasta el final 💌</div>
 </div>
 
 <!-- Final -->
@@ -171,6 +163,7 @@ button {
 
 <script>
 
+// CARTA
 let carta = `Hola preciosa, ¿como se encuentra la mami mas bonita de todo el mundo?
 
 Te escribo esta cartita de manera rapida mi amor, solo que sepas que te amo con todo mi corazon,
@@ -185,9 +178,7 @@ Me encantas. ❤️
 
 Desde que estás conmigo… todo se siente diferente.
 
-Cada momento contigo se vuelve especial...
-
-(toca la pantalla)`;
+Cada momento contigo se vuelve especial...`;
 
 let indexCarta = 0;
 
@@ -201,16 +192,17 @@ let mensajes = [
 ];
 
 let i = 0;
+let puedeContinuar = false;
 
+// abrir
 function abrir() {
     document.getElementById("lockscreen").style.display = "none";
     document.getElementById("system").style.display = "flex";
-
     document.getElementById("music").play();
-
     escribirSistema();
 }
 
+// sistema
 function escribirSistema() {
     if (i < mensajes.length) {
         document.getElementById("text").innerHTML += mensajes[i] + "<br>";
@@ -225,6 +217,7 @@ function escribirSistema() {
     }
 }
 
+// carta typing
 function escribirCarta() {
     if (indexCarta < carta.length) {
         document.getElementById("cartaTexto").innerHTML += carta.charAt(indexCarta);
@@ -233,25 +226,36 @@ function escribirCarta() {
     }
 }
 
-function mostrarFinal() {
-    document.getElementById("letter").style.display = "none";
-    document.getElementById("final").style.display = "block";
-}
+// detectar scroll final
+let letter = document.getElementById("letter");
 
+letter.addEventListener("scroll", function() {
+    if (letter.scrollTop + letter.clientHeight >= letter.scrollHeight - 10) {
+        puedeContinuar = true;
+        document.getElementById("scrollMsg").innerHTML = "Toca la pantalla ❤️";
+    }
+});
+
+// pasar a final SOLO si leyó todo
+letter.addEventListener("click", function() {
+    if (puedeContinuar) {
+        document.getElementById("letter").style.display = "none";
+        document.getElementById("final").style.display = "block";
+    }
+});
+
+// aceptar
 function aceptar() {
     alert("Sabía que dirías que sí ❤️ Te veo el domingo");
 }
 
+// botón troll
 let noBtn = document.getElementById("noBtn");
 
 function moverBoton() {
     noBtn.style.position = "absolute";
-
-    let x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    let y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
 }
 
 noBtn.addEventListener("touchstart", function(e) {
@@ -261,18 +265,15 @@ noBtn.addEventListener("touchstart", function(e) {
 
 noBtn.addEventListener("mouseover", moverBoton);
 
-function crearCorazon() {
+// corazones
+setInterval(() => {
     let heart = document.createElement("div");
     heart.className = "heart";
     heart.innerHTML = "❤️";
-
     heart.style.left = Math.random() * 100 + "vw";
-
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 5000);
-}
-setInterval(crearCorazon, 400);
+}, 400);
 
 </script>
 
